@@ -1,3 +1,10 @@
+import {
+  useEffect,
+  useState,
+} from 'react';
+
+import theCatApi from '../services/theCatApi';
+
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -8,6 +15,14 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 export default function CatsPage() {
+  const [breeds, setBreeds] = useState([]);
+
+  useEffect(() => {
+    theCatApi('breeds')
+      .then(res => res.json())
+      .then(setBreeds);
+  }, []);
+
   return (
     <Container>
       <h1>Cat Browser</h1>
@@ -17,8 +32,12 @@ export default function CatsPage() {
           <Form.Group>
             <Form.Label>Breed</Form.Label>
             <Form.Control as="select">
-              <option>Select Breed</option>
-              <option>Abyssinian</option>
+              <option value="">Select Breed</option>
+              {breeds.map(breed => (
+                <option key={breed.id} value={breed.id}>
+                  {breed.name}
+                </option>
+              ))}
             </Form.Control>
           </Form.Group>
         </Col>
