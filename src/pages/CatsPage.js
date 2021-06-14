@@ -16,15 +16,9 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 export default function CatsPage() {
-  const [breeds, setBreeds] = useState([]);
+  const breeds = useBreeds();
   const [breed, setBreed] = useState(null);
   const findBreed = id => breeds.find(breed => breed.id === id) || null;
-
-  useEffect(() => {
-    theCatApi('breeds')
-      .then(res => res.json())
-      .then(setBreeds);
-  }, []);
 
   const fetchCats = useCallback(page => {
     if (!breed) return Promise.resolve(null);
@@ -88,4 +82,14 @@ export default function CatsPage() {
       </Button>
     </Container>
   );
+}
+
+function useBreeds() {
+  const [breeds, setBreeds] = useState([]);
+  useEffect(() => {
+    theCatApi('breeds')
+      .then(res => res.json())
+      .then(setBreeds);
+  }, []);
+  return breeds;
 }
