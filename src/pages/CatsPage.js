@@ -19,6 +19,8 @@ export default function CatsPage() {
   const breeds = useBreeds();
   const [breed, setBreedId] = useBreed(breeds);
   const [cats, setCats] = useState(null);
+  const [page, setPage] = useState(1);
+  const [loadMoreIsVisible, setLoadMoreIsVisible] = useState(true);
 
   const fetchCats = useCallback(page => {
     if (!breed) return Promise.resolve(null);
@@ -27,7 +29,12 @@ export default function CatsPage() {
     return theCatApi(url).then(res => res.json());
   }, [breed]);
 
-  useEffect(() => fetchCats(1).then(setCats), [fetchCats]);
+  useEffect(() => {
+    fetchCats(1).then(cats => {
+      setLoadMoreIsVisible(true);
+      setCats(cats);
+    });
+  }, [fetchCats]);
 
   return (
     <Container>
@@ -71,13 +78,33 @@ export default function CatsPage() {
         )}
       </Row>
 
-      <Button
-        className="mt-3"
-        variant="success"
-        disabled={!breed}
-      >
-        Load more
-      </Button>
+      {loadMoreIsVisible && (
+        <Button
+          className="mt-3"
+          variant="success"
+          disabled={!breed}
+          onClick={() => {
+            const newPage = page + 1;
+            fetchCats(newPage).then(freshCats => {
+              setPage(newPage);
+              // note-start because thecatapi.com is showing some weird
+              //   api behaviour like SHOWING PREV RESULTS, these lines are
+              //   necessary.
+              const newCats = [...cats];
+              const length = newCats.length;
+              for (const freshCat of freshCats) {
+                if (!newCats.find(cat => cat.id === freshCat.id))
+                  newCats.push(freshCat);
+              }
+              // note-end
+              setLoadMoreIsVisible(length !== newCats.length);
+              setCats(newCats);
+            });
+          }}
+        >
+          Load more
+        </Button>
+      )}
     </Container>
   );
 }
