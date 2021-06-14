@@ -16,6 +16,8 @@ import Button from 'react-bootstrap/Button';
 
 export default function CatsPage() {
   const [breeds, setBreeds] = useState([]);
+  const [breed, setBreed] = useState(null);
+  const findBreed = id => breeds.find(breed => breed.id === id) || null;
 
   useEffect(() => {
     theCatApi('breeds')
@@ -31,7 +33,10 @@ export default function CatsPage() {
         <Col sm={6} md={3}>
           <Form.Group>
             <Form.Label>Breed</Form.Label>
-            <Form.Control as="select">
+            <Form.Control
+              as="select"
+              onChange={ev => setBreed(findBreed(ev.target.value))}
+            >
               <option value="">Select Breed</option>
               {breeds.map(breed => (
                 <option key={breed.id} value={breed.id}>
@@ -56,7 +61,11 @@ export default function CatsPage() {
         </Col>
       </Row>
 
-      <Button className="mt-3" variant="success">
+      <Button
+        className="mt-3"
+        variant="success"
+        disabled={!breed}
+      >
         Load more
       </Button>
     </Container>
