@@ -17,8 +17,7 @@ import Button from 'react-bootstrap/Button';
 
 export default function CatsPage() {
   const breeds = useBreeds();
-  const [breed, setBreed] = useState(null);
-  const findBreed = id => breeds.find(breed => breed.id === id) || null;
+  const [breed, setBreedId] = useBreed(breeds);
 
   const fetchCats = useCallback(page => {
     if (!breed) return Promise.resolve(null);
@@ -41,7 +40,7 @@ export default function CatsPage() {
             <Form.Label>Breed</Form.Label>
             <Form.Control
               as="select"
-              onChange={ev => setBreed(findBreed(ev.target.value))}
+              onChange={ev => setBreedId(ev.target.value)}
             >
               <option value="">Select Breed</option>
               {breeds.map(breed => (
@@ -92,4 +91,10 @@ function useBreeds() {
       .then(setBreeds);
   }, []);
   return breeds;
+}
+
+function useBreed(breeds) {
+  const [breed, setBreed] = useState(null);
+  const setBreedId = id => setBreed(breeds.find(b => b.id === id) || null);
+  return [breed, setBreedId];
 }
