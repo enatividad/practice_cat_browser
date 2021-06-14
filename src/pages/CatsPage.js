@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useState,
 } from 'react';
@@ -25,6 +26,17 @@ export default function CatsPage() {
       .then(setBreeds);
   }, []);
 
+  const fetchCats = useCallback(page => {
+    if (!breed) return Promise.resolve(null);
+
+    const url = `images/search?page=${page}&limit=10&breed_id=${breed.id}`;
+    return theCatApi(url).then(res => res.json());
+  }, [breed]);
+
+  const [cats, setCats] = useState(null);
+
+  useEffect(() => fetchCats(1).then(setCats), [fetchCats]);
+
   return (
     <Container>
       <h1>Cat Browser</h1>
@@ -49,16 +61,22 @@ export default function CatsPage() {
       </Row>
 
       <Row>
-        <Col sm={6} md={3}>
-          <Card>
-            <Card.Img variant="top" src="https://cdn2.thecatapi.com/images/TBA3JzB9P.jpg" />
-            <Card.Body>
-              <Button variant="primary" block>
-                View
-              </Button>
-            </Card.Body>
-          </Card>
-        </Col>
+        {cats ? cats.map(cat => (
+          <Col key={cat.id} sm={6} md={3}>
+            <Card>
+              <Card.Img variant="top" src={cat.url} />
+              <Card.Body>
+                <Button variant="primary" block>
+                  View
+                </Button>
+              </Card.Body>
+            </Card>
+          </Col>
+        )) : (
+          <Col>
+            No cats available
+          </Col>
+        )}
       </Row>
 
       <Button
