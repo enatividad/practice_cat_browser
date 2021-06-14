@@ -18,6 +18,7 @@ import Button from 'react-bootstrap/Button';
 export default function CatsPage() {
   const breeds = useBreeds();
   const [breed, setBreedId] = useBreed(breeds);
+  const [cats, setCats] = useState(null);
 
   const fetchCats = useCallback(page => {
     if (!breed) return Promise.resolve(null);
@@ -25,8 +26,6 @@ export default function CatsPage() {
     const url = `images/search?page=${page}&limit=10&breed_id=${breed.id}`;
     return theCatApi(url).then(res => res.json());
   }, [breed]);
-
-  const [cats, setCats] = useState(null);
 
   useEffect(() => fetchCats(1).then(setCats), [fetchCats]);
 
