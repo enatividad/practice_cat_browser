@@ -19,9 +19,7 @@ export default function CatPage() {
   const [image, setImage] = useState();
   useEffect(() => {
     if (catId) {
-      theCatApi(`images/${catId}`)
-        .then(res => res.json())
-        .then(i => setImage(i || null));
+      theCatApi(`images/${catId}`).then(i => setImage(i || null));
     } else {
       setImage(null);
     }

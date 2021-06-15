@@ -8,9 +8,7 @@ import theCatApi from '../../services/theCatApi';
 export default function useBreeds() {
   const [breeds, setBreeds] = useState([]);
   useEffect(() => {
-    theCatApi('breeds')
-      .then(res => res.json())
-      .then(setBreeds);
+    theCatApi('breeds').then(b => setBreeds(b || []));
   }, []);
   return breeds;
 }
