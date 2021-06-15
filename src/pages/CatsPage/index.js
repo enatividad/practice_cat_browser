@@ -8,13 +8,11 @@ import useCats from './useCats';
 import useLoadMore from './useLoadMore';
 
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 import Button from 'react-bootstrap/Button';
 
 import BreedPicker from './BreedPicker';
-import CatCard from './CatCard';
+import CatCards from './CatCards';
 
 export default function CatsPage() {
   const breeds = useBreeds();
@@ -36,15 +34,7 @@ export default function CatsPage() {
 
       <BreedPicker breeds={breeds} breed={breed} setBreedId={setBreedId} />
 
-      <Row>
-        {cats ? cats.map(cat => (
-          <CatCard key={cat.id} cat={cat} />
-        )) : (
-          <Col>
-            No cats available
-          </Col>
-        )}
-      </Row>
+      <CatCards cats={cats} />
 
       {loadMore.isVisible && (
         <Button
