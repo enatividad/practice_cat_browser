@@ -7,18 +7,14 @@ import useBreeds from './useBreeds';
 import useCats from './useCats';
 import useLoadMore from './useLoadMore';
 
-import {
-  Link,
-} from 'react-router-dom';
-
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import Card from 'react-bootstrap/Card';
-
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+
+import CatCard from './CatCard';
 
 export default function CatsPage() {
   const breeds = useBreeds();
@@ -60,19 +56,7 @@ export default function CatsPage() {
 
       <Row>
         {cats ? cats.map(cat => (
-          <Col key={cat.id} sm={6} md={3}>
-            <Card>
-              <Card.Img variant="top" src={cat.url} />
-              <Card.Body>
-                <Link
-                  className="btn btn-primary btn-block"
-                  to={`/cats/${cat.id}`}
-                >
-                  View
-                </Link>
-              </Card.Body>
-            </Card>
-          </Col>
+          <CatCard key={cat.id} cat={cat} />
         )) : (
           <Col>
             No cats available
