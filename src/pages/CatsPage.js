@@ -8,6 +8,8 @@ import theCatApi from '../services/theCatApi';
 
 import {
   useHistory,
+
+  Link,
 } from 'react-router-dom';
 
 import Container from 'react-bootstrap/Container';
@@ -63,9 +65,12 @@ export default function CatsPage() {
             <Card>
               <Card.Img variant="top" src={cat.url} />
               <Card.Body>
-                <Button variant="primary" block>
+                <Link
+                  className="btn btn-primary btn-block"
+                  to={`/cats/${cat.id}`}
+                >
                   View
-                </Button>
+                </Link>
               </Card.Body>
             </Card>
           </Col>
