@@ -1,9 +1,16 @@
+import {
+  useContext,
+} from 'react';
+
+import Context from './Context';
+
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import Form from 'react-bootstrap/Form';
 
-export default function BreedPicker({ breeds, breed, setBreedId }) {
+export default function BreedPicker() {
+  const { breeds, breed, setBreedId } = useContext(Context);
   return (
     <Row>
       <Col sm={6} md={3}>
