@@ -4,7 +4,7 @@ import {
   useState,
 } from 'react';
 
-import theCatApi from '../services/theCatApi';
+import theCatApi from '../../services/theCatApi';
 
 import {
   useHistory,
