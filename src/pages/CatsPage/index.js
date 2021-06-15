@@ -1,14 +1,13 @@
 import {
-  useCallback,
   useEffect,
-  useState,
 } from 'react';
 
-import theCatApi from '../../services/theCatApi';
+import useBreed from './useBreed';
+import useBreeds from './useBreeds';
+import useCats from './useCats';
+import useLoadMore from './useLoadMore';
 
 import {
-  useHistory,
-
   Link,
 } from 'react-router-dom';
 
@@ -93,72 +92,4 @@ export default function CatsPage() {
       )}
     </Container>
   );
-}
-
-function useBreeds() {
-  const [breeds, setBreeds] = useState([]);
-  useEffect(() => {
-    theCatApi('breeds')
-      .then(res => res.json())
-      .then(setBreeds);
-  }, []);
-  return breeds;
-}
-
-function useBreed(breeds) {
-  const history = useHistory();
-  const [breed, setBreed] = useState(null);
-  const setBreedId = useCallback(id => {
-    const breed = breeds.find(b => b.id === id) || null;
-    setBreed(breed);
-    if (breed)
-      history.push('?breed=' + breed.id);
-    else
-      history.push('');
-  }, [breeds, history]);
-
-  useEffect(() => {
-    if (!breeds.length) return;
-
-    const query = new URLSearchParams(window.location.search);
-    const breedId = query.get('breed');
-    if (breedId) setBreedId(breedId);
-  }, [breeds, setBreedId]);
-
-  return [breed, setBreedId];
-}
-
-function useCats(breed) {
-  const [cats, setCats] = useState(null);
-  const fetchCats = useCallback(page => {
-    if (!breed) return Promise.resolve(null);
-
-    const url = `images/search?page=${page}&limit=10&breed_id=${breed.id}`;
-    return theCatApi(url).then(res => res.json());
-  }, [breed]);
-  return [cats, setCats, fetchCats];
-}
-
-function useLoadMore(cats, setCats, fetchCats) {
-  const [isVisible, setIsVisible] = useState(true);
-  const [page, setPage] = useState(1);
-  const load = () => {
-    const newPage = page + 1;
-    fetchCats(newPage).then(freshCats => {
-      setPage(newPage);
-      // note-start because thecatapi.com is showing some weird
-      //   api behaviour like SHOWING PREV RESULTS, these lines are
-      //   necessary.
-      const newCats = [...cats];
-      const length = newCats.length;
-      for (const freshCat of freshCats) {
-        if (!newCats.find(cat => cat.id === freshCat.id))
-          newCats.push(freshCat);
-      }
-      // note-end
-      setIsVisible(length !== newCats.length);
-      setCats(newCats);
-    });
-  };
-  return { isVisible, setIsVisible, load };
 }
