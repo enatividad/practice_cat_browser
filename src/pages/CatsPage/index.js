@@ -11,9 +11,9 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
+import BreedPicker from './BreedPicker';
 import CatCard from './CatCard';
 
 export default function CatsPage() {
@@ -34,25 +34,7 @@ export default function CatsPage() {
     <Container>
       <h1>Cat Browser</h1>
 
-      <Row>
-        <Col sm={6} md={3}>
-          <Form.Group>
-            <Form.Label>Breed</Form.Label>
-            <Form.Control
-              as="select"
-              value={breed?.id || ''}
-              onChange={ev => setBreedId(ev.target.value)}
-            >
-              <option value="">Select Breed</option>
-              {breeds.map(breed => (
-                <option key={breed.id} value={breed.id}>
-                  {breed.name}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-        </Col>
-      </Row>
+      <BreedPicker breeds={breeds} breed={breed} setBreedId={setBreedId} />
 
       <Row>
         {cats ? cats.map(cat => (
